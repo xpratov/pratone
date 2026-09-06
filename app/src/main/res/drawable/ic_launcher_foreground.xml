@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer ring: the "player button" concept -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#35E4E0"
+        android:strokeWidth="4"
+        android:pathData="M54,20 a34,34 0 1,0 0.1,0 Z" />
+    <!-- Simple music note -->
+    <path
+        android:fillColor="#F5F5F7"
+        android:pathData="M60,40 v22 a8,8 0 1,1 -4,-6.9 V46 l-10,2 v16 a8,8 0 1,1 -4,-6.9 V38 l18,-3 Z" />
+</vector>

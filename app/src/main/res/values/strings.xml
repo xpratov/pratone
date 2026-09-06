@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Pratone</string>
+    <string name="wake_phrase">Hey Pratone</string>
+    <string name="notification_channel_playback">Playback</string>
+    <string name="notification_channel_voice">Voice listening</string>
+    <string name="voice_listening_notification_text">Listening for \"Hey Pratone\"</string>
+</resources>

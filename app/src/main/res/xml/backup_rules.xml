@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Exclude the Room database from auto-backup: it stores device-local URIs (MediaStore
+         content:// ids) that are not guaranteed stable across a restore to a different device. -->
+    <exclude domain="database" path="pratone.db" />
+</full-backup-content>

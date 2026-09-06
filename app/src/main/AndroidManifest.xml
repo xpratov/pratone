@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Reading the local music library. On API 33+ this is the scoped media permission;
+         below that we fall back to READ_EXTERNAL_STORAGE (see MediaPermissions.kt). -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- Voice control -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Required to run playback + voice-listening as foreground services (Android 9+ requires
+         FOREGROUND_SERVICE; Android 14+ additionally requires a declared foreground service TYPE
+         permission per service, which is why there are two separate type permissions below). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+
+    <!-- Android 13+ requires runtime permission to post the playback / listening notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Lets the app keep the CPU awake briefly while dispatching a voice command; NOT used to
+         keep the mic alive indefinitely — that's the foreground service's job. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Optional: lets Settings deep-link the user to the battery optimization exemption screen,
+         which materially improves background wake-word reliability on aggressive OEM skins. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <application
+        android:name=".PratoneApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Material.NoActionBar"
+        tools:targetApi="34">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Playback: Media3 MediaSessionService. This is what keeps music playing with the
+             screen off / phone locked and is what supplies lock-screen + notification controls. -->
+        <service
+            android:name=".playback.MusicPlaybackService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+
+        <!-- Voice listening: deliberately a SEPARATE foreground service from playback, with its
+             own type (microphone) and its own on/off switch in Settings, since a user may want
+             music playing in the background without the mic ever being active, or vice versa. -->
+        <service
+            android:name=".voice.VoiceListeningService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
+    </application>
+</manifest>
